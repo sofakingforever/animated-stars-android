@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="AnimatedStarsView">
+        <attr name="starsView_starCount" format="integer" />
+        <attr name="starsView_starColors" format="reference" />
+        <attr name="starsView_minStarSize" format="dimension"/>
+        <attr name="starsView_maxStarSize" format="dimension"/>
+        <attr name="starsView_bigStarThreshold" format="dimension"/>
+    </declare-styleable>
+
+</resources>
