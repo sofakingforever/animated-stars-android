@@ -24,7 +24,7 @@ Initiate analytics and send events
 ```xml
 
     <com.sofakingforever.stars.AnimatedStarsView
-        android:id="@+id/stars_white"
+        android:id="@+id/stars"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
