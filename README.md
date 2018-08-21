@@ -18,8 +18,8 @@ dependencies {
 }
 ```
 
-### Kotlin Implementation Example
-Initiate analytics and send events
+### Layout Implementation Example
+Insert View to the layout
 
 ```xml
 
@@ -35,6 +35,8 @@ Initiate analytics and send events
         app:starsView_starCount="30" />
 ```
 
+### Kotlin Implementation Example
+Call `onStart` and `onStop`
 ```kotlin
 
     override fun onStart() {
