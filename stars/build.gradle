@@ -54,7 +54,7 @@ repositories {
 
 ext {
     bintrayRepo = 'libraries'
-    bintrayName = 'stars'
+    bintrayName = 'animated-stars-android'
 
     publishedGroupId = 'com.sofakingforever.libraries'
     artifact = 'animated-stars-android'
