@@ -1,5 +1,5 @@
 # AnimatedStarsView for Android
-https://www.youtube.com/watch?time_continue=2&v=9tpJBTTqqSo
+https://www.youtube.com/watch?v=9tpJBTTqqSo
 
 Description Coming Soon
 
