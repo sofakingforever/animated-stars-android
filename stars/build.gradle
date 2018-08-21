@@ -13,7 +13,7 @@ buildscript {
     }
 }
 
-def versionNameStr = "1.0.1"
+def versionNameStr = "1.0.2"
 
 android {
     compileSdkVersion 28
@@ -23,7 +23,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 101
+        versionCode 102
         versionName versionNameStr
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -83,7 +83,7 @@ install {
         pom.project {
             packaging 'aar'
             groupId publishedGroupId
-            artifactId Artifact
+            artifactId artifact
 
             name libraryName
             description libraryDescription
