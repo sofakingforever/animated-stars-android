@@ -1,6 +1,7 @@
 # AnimatedStarsView for Android
 
 Kotlin Android view that draws animated stars on a canvas
+
 https://www.youtube.com/watch?v=mpwT7fZcn10
 
 ## Quick Start Guide
