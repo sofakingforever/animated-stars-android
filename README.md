@@ -1,7 +1,7 @@
 # AnimatedStarsView for Android
-https://www.youtube.com/watch?v=9tpJBTTqqSo
 
-Description Coming Soon
+Kotlin Android view that draws animated stars on a canvas
+Video Example: https://giphy.com/gifs/58FN9C6Hr26WyKO6zK/html5
 
 ## Quick Start Guide
 
