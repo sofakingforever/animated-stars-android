@@ -9,7 +9,7 @@ Kotlin Android view that draws animated stars on a canvas
 
 ## Quick Start Guide
 
-### Add To Gradle
+### Step 1
 Add library to your gradle module
 
 ```gradle
@@ -22,8 +22,8 @@ dependencies {
 }
 ```
 
-### Layout Implementation Example
-Insert View to the layout
+### Step 2
+Insert View via XML (or code)
 
 ```xml
 
@@ -31,16 +31,29 @@ Insert View to the layout
         android:id="@+id/stars"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        app:starsView_bigStarThreshold="20dp"
-        app:starsView_maxStarSize="4dp"
+        app:starsView_bigStarThreshold="10dp"
+        app:starsView_maxStarSize="16dp"
         app:starsView_minStarSize="1dp"
         app:starsView_starColors="@array/star_colors"
-        app:starsView_starCount="30" />
+        app:starsView_starCount="50" />
 ```
 
-### Kotlin Implementation Example
-Call `onStart` and `onStop`
+### Step 3
+Add the color array
+```xml
+    <integer-array name="star_colors_small">
+        <!-- This is how you can configure the ratio of star colors-->
+        <item>@color/star_color_1</item>
+        <item>@color/star_color_1</item>
+        <item>@color/star_color_1</item>
+        <item>@color/star_color_1</item>
+        <item>@color/star_color_2</item>
+        <item>@color/star_color_3</item>
+    </integer-array>
+```
+
+### Step 4
+Kotlin Implementation Example - Call `onStart` and `onStop`
 ```kotlin
 
     override fun onStart() {
@@ -53,6 +66,7 @@ Call `onStart` and `onStop`
         super.onStop()
     }
 ```
+### DONE!
 
 ### Originally developed for [Wakey - Beautiful Alarm Clock](https://play.google.com/store/apps/details?id=com.sofaking.moonworshipper&hl=en_US)
 
