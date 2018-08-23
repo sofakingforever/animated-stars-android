@@ -2,6 +2,11 @@
 
 Kotlin Android view that draws animated stars on a canvas
 
+
+### Preview (Click for video)
+[![Stars](https://github.com/sofakingforever/animated-stars-android/blob/master/screenshot.png?raw=true)](http://www.youtube.com/watch?v=mpwT7fZcn10)
+
+
 ## Quick Start Guide
 
 ### Add To Gradle
@@ -49,10 +54,6 @@ Call `onStart` and `onStop`
     }
 ```
 
-### Originally developed for [Wakey - Beautiful Alarm Clock](http://bit.ly/2Pmlwhg)
+### Originally developed for [Wakey - Beautiful Alarm Clock](https://play.google.com/store/apps/details?id=com.sofaking.moonworshipper&hl=en_US)
 
-
-### Preview
-[![Stars](https://github.com/sofakingforever/animated-stars-android/blob/master/screenshot.png?raw=true)](http://www.youtube.com/watch?v=mpwT7fZcn10)
-
-
+![Wakey Alarm Clock](https://cdn-images-1.medium.com/max/2000/1*DhcklS1xNZwHogX0wDQEyw.png)
