@@ -70,4 +70,8 @@ Kotlin Implementation Example - Call `onStart` and `onStop`
 
 ### Originally developed for [Wakey - Beautiful Alarm Clock](https://play.google.com/store/apps/details?id=com.sofaking.moonworshipper&hl=en_US)
 
+Wakey is a simple & beautiful animated alarm clock, featuring a spectacular design and an immersive experience - guaranteed to wake you up with a smile everyday!
+
+With our smiling sunrise, and grumpy lunar animations, this is the most unique alarm clock in our solar system.
+
 ![Wakey Alarm Clock](https://cdn-images-1.medium.com/max/2000/1*DhcklS1xNZwHogX0wDQEyw.png)
