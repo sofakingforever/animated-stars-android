@@ -14,8 +14,8 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
     var factor: Int = 1
     var increment: Double
 
-    private val length: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
-    private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    internal val length: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
+    internal val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
 
@@ -149,14 +149,14 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
 
     }
 
-    internal fun draw(canvas: Canvas?): Canvas? {
+    internal fun onDraw(canvas: Canvas?): Canvas? {
 
         // set current alpha to paint
 
         fillPaint.alpha = alpha
         strokePaint.alpha = alpha
 
-        // draw according to shape
+        // onDraw according to shape
 
         when (shape) {
             StarShape.Dot -> {
@@ -175,7 +175,7 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
 
     }
 
-    private enum class StarShape {
+    internal enum class StarShape {
         Circle, Star, Dot
     }
 

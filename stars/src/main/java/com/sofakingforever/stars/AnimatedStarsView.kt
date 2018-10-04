@@ -43,13 +43,15 @@ constructor(
 
 
     private var stars: List<Star> = emptyList()
+    private var meteorEntity: MeteorEntity? = null
 
     private lateinit var timer: Timer
     private lateinit var task: TimerTask
 
     private val random: Random = Random()
     private var initiated: Boolean = false
-    private var started : Boolean = false
+    private var started: Boolean = false
+
 
     /**
      * init view's attributes
@@ -133,10 +135,11 @@ constructor(
         // create a variable canvas object
         var newCanvas = canvas
 
-        if (stars.isNotEmpty())
-        {
-            // draw each star on the canvas
-            stars.forEach { newCanvas = it.draw(newCanvas) }
+        if (stars.isNotEmpty()) {
+            // onDraw each star on the canvas
+            stars.forEach { newCanvas = it.onDraw(newCanvas) }
+
+            newCanvas = meteorEntity?.onDraw(newCanvas)
 
             // reset flag
             starsCalculatedFlag = false
@@ -154,20 +157,30 @@ constructor(
     private fun initStars() {
 
         if (!started) return
+        val generateColor = { starColors[random.nextInt(starColors.size)] }
 
         stars = List(starCount) {
+
             Star(
-                    starConstraints, // constraints
-                    Math.round(Math.random() * viewWidth).toInt(), // x
-                    Math.round(Math.random() * viewHeight).toInt(), // y
-                    Math.random(), // opacity
-                    starColors[it % starColors.size], // color
-                    viewWidth,
-                    viewHeight
-                    // function for generating new color
-            ) { starColors[random.nextInt(starColors.size)] }
+                    starConstraints = starConstraints,
+                    x = Math.round(Math.random() * viewWidth).toInt(),
+                    y = Math.round(Math.random() * viewHeight).toInt(),
+                    opacity = Math.random(),
+                    color = starColors[it % starColors.size],
+                    viewWidth = viewWidth,
+                    viewHeight = viewHeight,
+                    colorListener = generateColor
+            )
         }
 
+        meteorEntity = MeteorEntity(starConstraints = starConstraints,
+                x = Math.round(Math.random() * viewWidth).toInt(),
+                y = Math.round(Math.random() * viewHeight).toInt(),
+                color = starColors[random.nextInt(starColors.size)],
+                viewWidth = viewWidth,
+                viewHeight = viewHeight,
+                colorListener = generateColor
+        )
         // so we know lateinit var was initiated
         initiated = true
 
@@ -185,6 +198,7 @@ constructor(
 
             // recalculate stars position and alpha on a background thread
             stars.forEach { it.calculateFrame(viewWidth, viewHeight) }
+            meteorEntity?.calculateFrame(viewWidth, viewHeight)
             starsCalculatedFlag = true
 
             // then post to ui thread
