@@ -1,3 +1,5 @@
+[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-animated--stars--android-green.svg?style=flat )]( https://android-arsenal.com/details/1/7202 )
+
 # AnimatedStarsView for Android
 
 Kotlin Android view that draws animated stars on a canvas
