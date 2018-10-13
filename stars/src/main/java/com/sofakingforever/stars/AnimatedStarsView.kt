@@ -52,7 +52,6 @@ constructor(
     private var initiated: Boolean = false
     private var started: Boolean = false
 
-
     /**
      * init view's attributes
      */
@@ -119,8 +118,9 @@ constructor(
         viewHeight = h
 
         if (viewWidth > 0 && viewHeight > 0) {
-            // init stars every time the size of the view has changed
-            initStars()
+            if (!initiated || stars.isEmpty()) {
+                initStars()
+            }
         }
     }
 
