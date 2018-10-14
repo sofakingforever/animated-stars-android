@@ -3,7 +3,7 @@ package com.sofakingforever.stars
 import android.graphics.Canvas
 import android.graphics.Paint
 
-internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener : () -> Unit) {
+internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener: () -> Unit) {
 
     //    private val length: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
     private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -36,8 +36,9 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
         return newCanvas
     }
 
-    internal class Meteor(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener : () -> Unit) {
+    internal class Meteor(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener: () -> Unit) {
 
+        private var onDoneInvoked = false
         internal val star: Star = Star(starConstraints, x, y, false, 1.0, color, viewWidth, viewHeight, colorListener)
 
 
@@ -46,8 +47,9 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
             star.x = star.x - 8
             star.y = star.y + 8
 
-            if (star.x < viewWidth * -1){
+            if (star.x < viewWidth * -1 && !onDoneInvoked) {
                 onDoneListener.invoke()
+                onDoneInvoked = true
             }
         }
 

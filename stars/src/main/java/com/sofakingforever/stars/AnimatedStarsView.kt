@@ -53,6 +53,10 @@ constructor(
     private var started: Boolean = false
 
 
+    private var meteoritesEnabled: Boolean
+
+    private var meteoritesInterval: Int
+
     /**
      * init view's attributes
      */
@@ -66,6 +70,9 @@ constructor(
         maxStarSize = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_maxStarSize, 24)
         bigStarThreshold = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_bigStarThreshold, Integer.MAX_VALUE)
         starConstraints = Star.StarConstraints(minStarSize, maxStarSize, bigStarThreshold)
+
+        meteoritesEnabled = array.getBoolean(R.styleable.AnimatedStarsView_starsView_meteoritesEnabled, true)
+        meteoritesInterval = array.getInt(R.styleable.AnimatedStarsView_starsView_meteoritesInterval, 5000)
 
         val starColorsArrayId = array.getResourceId(R.styleable.AnimatedStarsView_starsView_starColors, 0)
 
@@ -163,16 +170,23 @@ constructor(
         val generateColor = { starColors[random.nextInt(starColors.size)] }
 
         onDoneListener = {
-            postDelayed({}, 5000)
-            meteorEntity = MeteorEntity(starConstraints = starConstraints,
-                    x = viewWidth,
-                    y = Math.round(Math.random() * viewHeight).toInt(),
-                    color = starColors[random.nextInt(starColors.size)],
-                    viewWidth = viewWidth,
-                    viewHeight = viewHeight,
-                    colorListener = generateColor,
-                    onDoneListener = onDoneListener
-            )
+
+            if (meteoritesEnabled) {
+                postDelayed({
+
+                    meteorEntity = MeteorEntity(starConstraints = starConstraints,
+                            x = viewWidth,
+                            y = Math.round(Math.random() * viewHeight).toInt(),
+                            color = starColors[random.nextInt(starColors.size)],
+                            viewWidth = viewWidth,
+                            viewHeight = viewHeight,
+                            colorListener = generateColor,
+                            onDoneListener = onDoneListener
+                    )
+
+                }, meteoritesInterval.toLong())
+            }
+
         }
 
         stars = List(starCount) {
