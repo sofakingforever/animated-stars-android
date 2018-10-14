@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.sofakingforever.libraries:stars:1.0.3@aar'
+    compile 'com.sofakingforever.libraries:stars:1.0.5@aar'
 }
 ```
 
@@ -34,6 +34,9 @@ Insert View via XML (or code)
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:starsView_bigStarThreshold="10dp"
+        app:starsView_meteoritesColors="@array/meteorites_colors"
+        app:starsView_meteoritesEnabled="true"
+        app:starsView_meteoritesInterval="2000"
         app:starsView_maxStarSize="16dp"
         app:starsView_minStarSize="1dp"
         app:starsView_starColors="@array/star_colors"
@@ -52,6 +55,15 @@ Add the color array
         <item>@color/star_color_2</item>
         <item>@color/star_color_3</item>
     </integer-array>
+
+
+    <integer-array name="meteorites_colors">
+
+        <item>@color/star_color_2</item>
+        <item>@color/star_color_4</item>
+        <item>@color/star_color_3</item>
+    </integer-array>
+
 ```
 
 ### Step 4
