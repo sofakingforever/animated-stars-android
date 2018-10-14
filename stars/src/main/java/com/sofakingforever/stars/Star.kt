@@ -7,15 +7,15 @@ import android.graphics.RectF
 /**
  * Single star in sky view
  */
-internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, var opacity: Double, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int) {
+internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, var randomizeLocation: Boolean, var opacity: Double, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int) {
 
 
     var alpha: Int = 0
     var factor: Int = 1
     var increment: Double
 
-    private val length: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
-    private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    internal val length: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
+    internal val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
 
@@ -66,7 +66,7 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
             }
         }
 
-        initLocationAndRectangles(viewWidth, viewHeight)
+        initLocationAndRectangles(viewWidth, viewHeight, randomizeLocation)
     }
 
     /**
@@ -96,7 +96,7 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
                 alpha = 0
 
                 // and relocate star
-                initLocationAndRectangles(viewWidth, viewHeight)
+                initLocationAndRectangles(viewWidth, viewHeight, true)
 
                 color = colorListener.invoke()
 
@@ -119,13 +119,15 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
     /**
      * init star's position and rectangles if needed
      */
-    private fun initLocationAndRectangles(viewWidth: Int, viewHeight: Int) {
+    private fun initLocationAndRectangles(viewWidth: Int, viewHeight: Int, randomizeLocation: Boolean) {
 
-        // randomize location
+        if (randomizeLocation) {
+            // randomize location
 
-        x = Math.round(Math.random() * viewWidth).toInt()
-        y = Math.round(Math.random() * viewHeight).toInt()
+            x = Math.round(Math.random() * viewWidth).toInt()
+            y = Math.round(Math.random() * viewHeight).toInt()
 
+        }
         // calculate rectangles for big stars
 
         if (shape == StarShape.Star) {
@@ -149,14 +151,14 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
 
     }
 
-    internal fun draw(canvas: Canvas?): Canvas? {
+    internal fun onDraw(canvas: Canvas?): Canvas? {
 
         // set current alpha to paint
 
         fillPaint.alpha = alpha
         strokePaint.alpha = alpha
 
-        // draw according to shape
+        // onDraw according to shape
 
         when (shape) {
             StarShape.Dot -> {
@@ -175,7 +177,7 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
 
     }
 
-    private enum class StarShape {
+    internal enum class StarShape {
         Circle, Star, Dot
     }
 

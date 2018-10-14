@@ -7,6 +7,10 @@
         <attr name="starsView_minStarSize" format="dimension"/>
         <attr name="starsView_maxStarSize" format="dimension"/>
         <attr name="starsView_bigStarThreshold" format="dimension"/>
+
+        <attr name="starsView_meteoritesColors" format="reference" />
+        <attr name="starsView_meteoritesEnabled" format="boolean"/>
+        <attr name="starsView_meteoritesInterval" format="integer"/>
     </declare-styleable>
 
 </resources>
