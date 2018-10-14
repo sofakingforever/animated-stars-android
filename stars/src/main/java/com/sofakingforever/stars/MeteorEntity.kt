@@ -44,8 +44,8 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
 
         fun calculateFrame(viewWidth: Int, viewHeight: Int) {
 //            star.calculateFrame(viewWidth, viewHeight)
-            star.x = star.x - 8
-            star.y = star.y + 8
+            star.x = star.x - star.length.toInt()
+            star.y = star.y + star.length.toInt()
 
             if (star.x < viewWidth * -1 && !onDoneInvoked) {
                 onDoneListener.invoke()
