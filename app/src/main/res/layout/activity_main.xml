@@ -13,20 +13,21 @@
         android:layout_height="match_parent"
         app:starsView_bigStarThreshold="20dp"
         app:starsView_maxStarSize="4dp"
-        app:starsView_minStarSize="1dp"
+        app:starsView_meteoritesColors="@array/meteorites_colors"
         app:starsView_meteoritesEnabled="true"
         app:starsView_meteoritesInterval="2000"
+        app:starsView_minStarSize="1dp"
         app:starsView_starColors="@array/star_colors_small"
         app:starsView_starCount="30" />
 
 
     <com.sofakingforever.stars.AnimatedStarsView
         android:id="@+id/stars"
-        app:starsView_meteoritesEnabled="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:starsView_bigStarThreshold="8dp"
         app:starsView_maxStarSize="16dp"
+        app:starsView_meteoritesEnabled="false"
         app:starsView_minStarSize="8dp"
         app:starsView_starColors="@array/star_colors_big"
         app:starsView_starCount="2" />

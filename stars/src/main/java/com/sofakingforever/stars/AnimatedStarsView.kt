@@ -32,6 +32,7 @@ constructor(
 
     private var starCount: Int
     private var starColors: IntArray
+    private var meteoritesColors : IntArray
     private var bigStarThreshold: Int
     private var minStarSize: Int
     private var maxStarSize: Int
@@ -71,13 +72,20 @@ constructor(
         bigStarThreshold = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_bigStarThreshold, Integer.MAX_VALUE)
         starConstraints = Star.StarConstraints(minStarSize, maxStarSize, bigStarThreshold)
 
+        meteoritesColors  = intArrayOf()
         meteoritesEnabled = array.getBoolean(R.styleable.AnimatedStarsView_starsView_meteoritesEnabled, true)
         meteoritesInterval = array.getInt(R.styleable.AnimatedStarsView_starsView_meteoritesInterval, 5000)
 
         val starColorsArrayId = array.getResourceId(R.styleable.AnimatedStarsView_starsView_starColors, 0)
+        val meteoritesColorsArrayId = array.getResourceId(R.styleable.AnimatedStarsView_starsView_meteoritesColors, 0)
 
         if (starColorsArrayId != 0) {
             starColors = context.resources.getIntArray(starColorsArrayId)
+        }
+
+        if (meteoritesColorsArrayId!= 0) {
+            meteoritesColors = context.resources.getIntArray(meteoritesColorsArrayId)
+
         }
 
         array.recycle()
@@ -177,7 +185,7 @@ constructor(
                     meteorEntity = MeteorEntity(starConstraints = starConstraints,
                             x = viewWidth,
                             y = Math.round(Math.random() * viewHeight).toInt(),
-                            color = starColors[random.nextInt(starColors.size)],
+                            color = meteoritesColors[random.nextInt(starColors.size)],
                             viewWidth = viewWidth,
                             viewHeight = viewHeight,
                             colorListener = generateColor,
