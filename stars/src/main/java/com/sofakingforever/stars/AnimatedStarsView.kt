@@ -152,6 +152,8 @@ constructor(
     }
 
 
+    private lateinit var onDoneListener: () -> Unit
+
     /**
      * create x stars with a random point location and opacity
      */
@@ -160,12 +162,26 @@ constructor(
         if (!started) return
         val generateColor = { starColors[random.nextInt(starColors.size)] }
 
+        onDoneListener = {
+            postDelayed({}, 5000)
+            meteorEntity = MeteorEntity(starConstraints = starConstraints,
+                    x = viewWidth,
+                    y = Math.round(Math.random() * viewHeight).toInt(),
+                    color = starColors[random.nextInt(starColors.size)],
+                    viewWidth = viewWidth,
+                    viewHeight = viewHeight,
+                    colorListener = generateColor,
+                    onDoneListener = onDoneListener
+            )
+        }
+
         stars = List(starCount) {
 
             Star(
                     starConstraints = starConstraints,
-                    x = Math.round(Math.random() * viewWidth).toInt(),
-                    y = Math.round(Math.random() * viewHeight).toInt(),
+                    x = 0,
+                    y = 0,
+                    randomizeLocation = true,
                     opacity = Math.random(),
                     color = starColors[it % starColors.size],
                     viewWidth = viewWidth,
@@ -173,15 +189,8 @@ constructor(
                     colorListener = generateColor
             )
         }
+        onDoneListener.invoke()
 
-        meteorEntity = MeteorEntity(starConstraints = starConstraints,
-                x = Math.round(Math.random() * viewWidth).toInt(),
-                y = Math.round(Math.random() * viewHeight).toInt(),
-                color = starColors[random.nextInt(starColors.size)],
-                viewWidth = viewWidth,
-                viewHeight = viewHeight,
-                colorListener = generateColor
-        )
         // so we know lateinit var was initiated
         initiated = true
 

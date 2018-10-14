@@ -3,7 +3,7 @@ package com.sofakingforever.stars
 import android.graphics.Canvas
 import android.graphics.Paint
 
-internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int) {
+internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener : () -> Unit) {
 
     //    private val length: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
     private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -11,7 +11,7 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
 
     private var shape: Star.StarShape = Star.StarShape.Dot
 
-    private val meteor: Meteor = Meteor(starConstraints, x, y, color, viewWidth, viewHeight, colorListener)
+    private val meteor: Meteor = Meteor(starConstraints, x, y, color, viewWidth, viewHeight, colorListener, onDoneListener)
     private val trail: Trail = Trail(meteor.star.length, meteor.star.fillPaint)
 
     init {
@@ -36,15 +36,19 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
         return newCanvas
     }
 
-    internal class Meteor(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int) {
+    internal class Meteor(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener : () -> Unit) {
 
-        internal val star: Star = Star(starConstraints, x, y, 1.0, color, viewWidth, viewHeight, colorListener)
+        internal val star: Star = Star(starConstraints, x, y, false, 1.0, color, viewWidth, viewHeight, colorListener)
 
 
         fun calculateFrame(viewWidth: Int, viewHeight: Int) {
 //            star.calculateFrame(viewWidth, viewHeight)
-            star.x = star.x - 6
-            star.y = star.y + 6
+            star.x = star.x - 8
+            star.y = star.y + 8
+
+            if (star.x < viewWidth * -1){
+                onDoneListener.invoke()
+            }
         }
 
         fun onDraw(canvas: Canvas?): Canvas? {

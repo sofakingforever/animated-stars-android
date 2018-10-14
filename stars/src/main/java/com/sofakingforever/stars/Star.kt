@@ -7,7 +7,7 @@ import android.graphics.RectF
 /**
  * Single star in sky view
  */
-internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, var opacity: Double, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int) {
+internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, var randomizeLocation: Boolean, var opacity: Double, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int) {
 
 
     var alpha: Int = 0
@@ -66,7 +66,7 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
             }
         }
 
-        initLocationAndRectangles(viewWidth, viewHeight)
+        initLocationAndRectangles(viewWidth, viewHeight, randomizeLocation)
     }
 
     /**
@@ -96,7 +96,7 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
                 alpha = 0
 
                 // and relocate star
-                initLocationAndRectangles(viewWidth, viewHeight)
+                initLocationAndRectangles(viewWidth, viewHeight, true)
 
                 color = colorListener.invoke()
 
@@ -119,13 +119,15 @@ internal class Star(starConstraints: StarConstraints, var x: Int, var y: Int, va
     /**
      * init star's position and rectangles if needed
      */
-    private fun initLocationAndRectangles(viewWidth: Int, viewHeight: Int) {
+    private fun initLocationAndRectangles(viewWidth: Int, viewHeight: Int, randomizeLocation: Boolean) {
 
-        // randomize location
+        if (randomizeLocation) {
+            // randomize location
 
-        x = Math.round(Math.random() * viewWidth).toInt()
-        y = Math.round(Math.random() * viewHeight).toInt()
+            x = Math.round(Math.random() * viewWidth).toInt()
+            y = Math.round(Math.random() * viewHeight).toInt()
 
+        }
         // calculate rectangles for big stars
 
         if (shape == StarShape.Star) {
