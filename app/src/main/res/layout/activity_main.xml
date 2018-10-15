@@ -15,7 +15,7 @@
         app:starsView_maxStarSize="4dp"
         app:starsView_meteoritesColors="@array/meteorites_colors"
         app:starsView_meteoritesEnabled="true"
-        app:starsView_meteoritesInterval="2000"
+        app:starsView_meteoritesInterval="1000"
         app:starsView_minStarSize="1dp"
         app:starsView_starColors="@array/star_colors_small"
         app:starsView_starCount="30" />
