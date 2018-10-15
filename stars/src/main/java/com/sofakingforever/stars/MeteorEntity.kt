@@ -44,8 +44,8 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
 
         fun calculateFrame(viewWidth: Int, viewHeight: Int) {
 //            star.calculateFrame(viewWidth, viewHeight)
-            star.x = star.x - star.length.toInt()
-            star.y = star.y + star.length.toInt()
+            star.x = star.x - (star.length / 2.0).toInt()
+            star.y = star.y + (star.length / 2.0).toInt()
 
             if (star.x < viewWidth * -1 && !onDoneInvoked) {
                 onDoneListener.invoke()
@@ -88,7 +88,7 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
 
         internal class TrailPixel(val x: Int, val y: Int, val length: Double) {
             fun calculatePixel() {
-                opacity -= 0.015
+                opacity -= 0.012
 
                 if (opacity < 0) {
                     opacity = 0.0
