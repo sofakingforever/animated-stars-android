@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.sofakingforever.libraries:stars:1.0.7@aar'
+    implementation 'com.sofakingforever.libraries:stars:1.0.8@aar'
 }
 ```
 
