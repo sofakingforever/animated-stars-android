@@ -1,9 +1,9 @@
-package com.sofakingforever.stars.entities
+package com.sofakingforever.stars.entities.stars
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import com.sofakingforever.stars.StarConstraints
+import com.sofakingforever.stars.entities.StarConstraints
 
 class ShinyStar(starConstraints: StarConstraints, x: Int, y: Int, color: Int, listener: StarCompleteListener) : BaseStar(starConstraints, x, y, color, listener) {
 

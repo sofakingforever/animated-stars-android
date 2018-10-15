@@ -1,9 +1,8 @@
-package com.sofakingforever.stars.entities
+package com.sofakingforever.stars.entities.stars
 
-import android.graphics.Canvas
 import android.graphics.Paint
-import com.sofakingforever.stars.Star
-import com.sofakingforever.stars.StarConstraints
+import com.sofakingforever.stars.entities.Star
+import com.sofakingforever.stars.entities.StarConstraints
 
 abstract class BaseStar(
         starConstraints: StarConstraints,

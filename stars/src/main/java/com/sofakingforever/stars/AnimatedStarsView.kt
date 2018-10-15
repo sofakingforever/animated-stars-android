@@ -4,7 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
-import com.sofakingforever.stars.entities.BaseStar
+import com.sofakingforever.stars.entities.InterstellarFactory
+import com.sofakingforever.stars.entities.Star
+import com.sofakingforever.stars.entities.StarConstraints
+import com.sofakingforever.stars.entities.stars.BaseStar
 import com.sofakingforever.stars.entities.meteor.Meteorite
 import com.sofakingforever.stars.entities.meteor.MeteoriteWrapper
 import java.util.*

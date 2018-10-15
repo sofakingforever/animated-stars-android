@@ -1,4 +1,4 @@
-package com.sofakingforever.stars
+package com.sofakingforever.stars.entities
 
 import android.graphics.Canvas
 

@@ -1,9 +1,9 @@
-package com.sofakingforever.stars
+package com.sofakingforever.stars.entities
 
-import com.sofakingforever.stars.entities.BaseStar
-import com.sofakingforever.stars.entities.RoundyStar
-import com.sofakingforever.stars.entities.ShinyStar
-import com.sofakingforever.stars.entities.TinyStar
+import com.sofakingforever.stars.entities.stars.BaseStar
+import com.sofakingforever.stars.entities.stars.RoundyStar
+import com.sofakingforever.stars.entities.stars.ShinyStar
+import com.sofakingforever.stars.entities.stars.TinyStar
 
 object InterstellarFactory {
 
