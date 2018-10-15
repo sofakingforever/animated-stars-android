@@ -3,13 +3,13 @@ package com.sofakingforever.stars
 import android.graphics.Canvas
 import android.graphics.Paint
 
-internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener: () -> Unit) {
+internal class MeteorEntity(starConstraints: StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener: () -> Unit) {
 
-    //    private val length: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
+    //    private val starSize: Double = (starConstraints.minStarSize + Math.random() * (starConstraints.maxStarSize - starConstraints.minStarSize))
     private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 //    private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private var shape: Star.StarShape = Star.StarShape.Dot
+    private var shape: OldStar.StarShape = OldStar.StarShape.Dot
 
     private val meteor: Meteor = Meteor(starConstraints, x, y, color, viewWidth, viewHeight, colorListener, onDoneListener)
     private val trail: Trail = Trail(meteor.star.length, meteor.star.fillPaint)
@@ -36,10 +36,10 @@ internal class MeteorEntity(starConstraints: Star.StarConstraints, var x: Int, v
         return newCanvas
     }
 
-    internal class Meteor(starConstraints: Star.StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener: () -> Unit) {
+    internal class Meteor(starConstraints: StarConstraints, var x: Int, var y: Int, var color: Int, viewWidth: Int, viewHeight: Int, private val colorListener: () -> Int, private val onDoneListener: () -> Unit) {
 
         private var onDoneInvoked = false
-        internal val star: Star = Star(starConstraints, x, y, false, 1.0, color, viewWidth, viewHeight, colorListener)
+        internal val star: OldStar = OldStar(starConstraints, x, y, false, 1.0, color, viewWidth, viewHeight, colorListener)
 
 
         fun calculateFrame(viewWidth: Int, viewHeight: Int) {

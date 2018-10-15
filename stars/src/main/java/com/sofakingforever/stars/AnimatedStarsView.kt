@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
+import com.sofakingforever.stars.entities.BaseStar
 import java.util.*
 import java.util.Collections.emptyList
 import java.util.concurrent.Executors
@@ -32,7 +33,7 @@ constructor(
 
     private var starCount: Int
     private var starColors: IntArray
-    private var meteoritesColors : IntArray
+    private var meteoritesColors: IntArray
     private var bigStarThreshold: Int
     private var minStarSize: Int
     private var maxStarSize: Int
@@ -40,10 +41,10 @@ constructor(
     private var starsCalculatedFlag: Boolean = false
     private var viewWidth: Int = 0
     private var viewHeight: Int = 0
-    private var starConstraints: Star.StarConstraints
+    private var starConstraints: StarConstraints
 
 
-    private var stars: List<Star> = emptyList()
+    private var stars: MutableList<Star> = mutableListOf()
     private var meteorEntity: MeteorEntity? = null
 
     private lateinit var timer: Timer
@@ -70,9 +71,9 @@ constructor(
         minStarSize = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_minStarSize, 4)
         maxStarSize = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_maxStarSize, 24)
         bigStarThreshold = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_bigStarThreshold, Integer.MAX_VALUE)
-        starConstraints = Star.StarConstraints(minStarSize, maxStarSize, bigStarThreshold)
+        starConstraints = StarConstraints(minStarSize, maxStarSize, bigStarThreshold)
 
-        meteoritesColors  = intArrayOf()
+        meteoritesColors = intArrayOf()
         meteoritesEnabled = array.getBoolean(R.styleable.AnimatedStarsView_starsView_meteoritesEnabled, false)
         meteoritesInterval = array.getInt(R.styleable.AnimatedStarsView_starsView_meteoritesInterval, 5000)
 
@@ -83,7 +84,7 @@ constructor(
             starColors = context.resources.getIntArray(starColorsArrayId)
         }
 
-        if (meteoritesColorsArrayId!= 0) {
+        if (meteoritesColorsArrayId != 0) {
             meteoritesColors = context.resources.getIntArray(meteoritesColorsArrayId)
 
         }
@@ -170,7 +171,7 @@ constructor(
     private lateinit var onDoneListener: () -> Unit
 
     /**
-     * create x stars with a random point location and opacity
+     * create x stars with a random point location and alphaDouble
      */
     private fun initStars() {
 
@@ -197,25 +198,31 @@ constructor(
 
         }
 
-        stars = List(starCount) {
 
-            Star(
-                    starConstraints = starConstraints,
-                    x = 0,
-                    y = 0,
-                    randomizeLocation = true,
-                    opacity = Math.random(),
-                    color = starColors[it % starColors.size],
-                    viewWidth = viewWidth,
-                    viewHeight = viewHeight,
-                    colorListener = generateColor
-            )
+        stars = MutableList(starCount) {
+
+            val starCompleteListener = object : BaseStar.StarCompleteListener {
+                override fun onStarAnimationComplete() {
+                    stars[it] = createStar(it, this)
+                }
+
+            }
+            createStar(it, starCompleteListener)
+
         }
         onDoneListener.invoke()
 
         // so we know lateinit var was initiated
         initiated = true
 
+    }
+
+    private fun createStar(it: Int, starCompleteListener: BaseStar.StarCompleteListener): Star {
+        return InterstellarFactory.create(starConstraints = starConstraints,
+                x = Math.round(Math.random() * viewWidth).toInt(),
+                y = Math.round(Math.random() * viewHeight).toInt(),
+                color = starColors[it % starColors.size],
+                listener = starCompleteListener)
     }
 
     /**
@@ -228,8 +235,8 @@ constructor(
         // new background thread
         threadExecutor.execute {
 
-            // recalculate stars position and alpha on a background thread
-            stars.forEach { it.calculateFrame(viewWidth, viewHeight) }
+            // recalculate stars position and alphaInt on a background thread
+            stars.forEach { it.calculateFrame() }
             meteorEntity?.calculateFrame(viewWidth, viewHeight)
             starsCalculatedFlag = true
 
