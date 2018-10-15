@@ -7,8 +7,24 @@ internal class MeteoriteTrail(val length: Int, val fillPaint: Paint) {
 
     private val trailPixels: MutableList<TrailPixel> = mutableListOf()
 
+    private var isFirst: Boolean = true
+
     fun addPixel(x: Int, y: Int) {
-        trailPixels.add(TrailPixel(x, y, length))
+
+        trailPixels.add(TrailPixel(x , y, length, isFirst))
+
+        if (isFirst) {
+            isFirst = false
+        }
+
+//        for (i in length downTo 1 ) {
+//            trailPixels.add(TrailPixel(x + i, y - i, length, isFirst))
+//
+//            if (isFirst) {
+//                isFirst = false
+//            }
+//        }
+
     }
 
     fun calculatePixels() {
@@ -27,12 +43,12 @@ internal class MeteoriteTrail(val length: Int, val fillPaint: Paint) {
     }
 
 
-    internal class TrailPixel(val x: Int, val y: Int, val length: Int) {
+    internal class TrailPixel(val x: Int, val y: Int, val length: Int, first: Boolean) {
 
-        var opacity: Double = 1.0
+        var opacity: Double = if (first) 1.0 else 0.70
 
         fun calculatePixel() {
-            opacity -= 0.012
+            opacity -= 0.01
 
             if (opacity < 0) {
                 opacity = 0.0

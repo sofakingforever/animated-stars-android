@@ -2,9 +2,8 @@ package com.sofakingforever.stars.entities.meteor
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import com.sofakingforever.stars.entities.BaseStar
 
-internal class MeteoriteWrapper(var x: Int, var y: Int, starSize: Int, var color: Int, val listener: BaseStar.StarCompleteListener) {
+internal class MeteoriteWrapper(var x: Int, var y: Int, starSize: Int, var color: Int, val listener: Meteorite.MeteoriteCompleteListener) {
 
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).also { it.color = color }

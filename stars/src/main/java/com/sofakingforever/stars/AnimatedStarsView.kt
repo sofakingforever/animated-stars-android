@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 import com.sofakingforever.stars.entities.BaseStar
+import com.sofakingforever.stars.entities.meteor.Meteorite
 import com.sofakingforever.stars.entities.meteor.MeteoriteWrapper
 import java.util.*
 import java.util.concurrent.Executors
@@ -168,7 +169,7 @@ constructor(
     }
 
 
-    private lateinit var meteoriteListener: BaseStar.StarCompleteListener
+    private lateinit var meteoriteListener: Meteorite.MeteoriteCompleteListener
 
     /**
      * create x stars with a random point location and alphaDouble
@@ -178,14 +179,14 @@ constructor(
         if (!started) return
 //        val generateColor = { starColors[random.nextInt(starColors.size)] }
 
-        meteoriteListener = object : BaseStar.StarCompleteListener {
-            override fun onStarAnimationComplete() {
+        meteoriteListener = object : Meteorite.MeteoriteCompleteListener {
+            override fun onMeteoriteComplete() {
                 if (meteoritesEnabled) {
                     postDelayed({
 
                         meteoriteWrapper = MeteoriteWrapper(
                                 x = viewWidth,
-                                y = Math.round(Math.random() * viewHeight).toInt(),
+                                y = Math.round(Math.random() * (viewHeight * 2 / 3)).toInt(),
                                 color = meteoritesColors[random.nextInt(meteoritesColors.size)],
                                 starSize = starConstraints.getRandomStarSize().toInt(),
                                 listener = meteoriteListener
@@ -209,7 +210,7 @@ constructor(
             createStar(it, starCompleteListener)
 
         }
-        meteoriteListener.onStarAnimationComplete()
+        meteoriteListener.onMeteoriteComplete()
 
         // so we know lateinit var was initiated
         initiated = true

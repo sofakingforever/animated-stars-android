@@ -2,25 +2,27 @@ package com.sofakingforever.stars.entities.meteor
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import com.sofakingforever.stars.entities.BaseStar
 
-internal class Meteorite(var x: Int, var y: Int, private val starSize: Int, var color: Int, val paint: Paint, val listener: BaseStar.StarCompleteListener) {
+internal class Meteorite(var x: Int, var y: Int, private val starSize: Int, var color: Int, val paint: Paint, val listener: MeteoriteCompleteListener) {
 
-    private var onDoneInvoked = false
-
-//        internal val star: TinyStar = TinyStar(starConstraints, x, y, color, listener)
-
+    private var finished = false
+    private val factor = starSize * (Math.random() * 1.5)
 
     fun calculateFrame(viewWidth: Int, viewHeight: Int) {
+
+        if (finished) {
+            return
+        }
+
         // go left
-        x -= (starSize / 2.0).toInt()
+        x -= factor.toInt()
 
         // go down
-        y += (starSize / 2.0).toInt()
+        y += factor.toInt()
 
-        if (x < viewWidth * -1 && !onDoneInvoked) {
-            listener.onStarAnimationComplete()
-            onDoneInvoked = true
+        if (x < (viewWidth * -0.5)) {
+            listener.onMeteoriteComplete()
+            finished = true
         }
     }
 
@@ -30,4 +32,7 @@ internal class Meteorite(var x: Int, var y: Int, private val starSize: Int, var 
         return canvas
     }
 
+    interface MeteoriteCompleteListener {
+        fun onMeteoriteComplete()
+    }
 }
