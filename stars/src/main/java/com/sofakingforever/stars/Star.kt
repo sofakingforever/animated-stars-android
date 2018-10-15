@@ -4,8 +4,8 @@ import android.graphics.Canvas
 
 interface Star {
 
-    val x: Int
-    val y: Int
+    var x: Int
+    var y: Int
     val color: Int
 
     var alphaDouble: Double

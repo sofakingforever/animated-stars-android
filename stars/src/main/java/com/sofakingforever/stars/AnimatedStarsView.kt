@@ -5,8 +5,8 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 import com.sofakingforever.stars.entities.BaseStar
+import com.sofakingforever.stars.entities.meteor.MeteoriteWrapper
 import java.util.*
-import java.util.Collections.emptyList
 import java.util.concurrent.Executors
 import kotlin.concurrent.timerTask
 
@@ -45,7 +45,7 @@ constructor(
 
 
     private var stars: MutableList<Star> = mutableListOf()
-    private var meteorEntity: MeteorEntity? = null
+    private var meteoriteWrapper: MeteoriteWrapper? = null
 
     private lateinit var timer: Timer
     private lateinit var task: TimerTask
@@ -156,7 +156,7 @@ constructor(
             // onDraw each star on the canvas
             stars.forEach { newCanvas = it.onDraw(newCanvas) }
 
-            newCanvas = meteorEntity?.onDraw(newCanvas)
+            newCanvas = meteoriteWrapper?.onDraw(newCanvas)
 
             // reset flag
             starsCalculatedFlag = false
@@ -168,7 +168,7 @@ constructor(
     }
 
 
-    private lateinit var onDoneListener: () -> Unit
+    private lateinit var meteoriteListener: BaseStar.StarCompleteListener
 
     /**
      * create x stars with a random point location and alphaDouble
@@ -176,24 +176,23 @@ constructor(
     private fun initStars() {
 
         if (!started) return
-        val generateColor = { starColors[random.nextInt(starColors.size)] }
+//        val generateColor = { starColors[random.nextInt(starColors.size)] }
 
-        onDoneListener = {
+        meteoriteListener = object : BaseStar.StarCompleteListener {
+            override fun onStarAnimationComplete() {
+                if (meteoritesEnabled) {
+                    postDelayed({
 
-            if (meteoritesEnabled) {
-                postDelayed({
+                        meteoriteWrapper = MeteoriteWrapper(
+                                x = viewWidth,
+                                y = Math.round(Math.random() * viewHeight).toInt(),
+                                color = meteoritesColors[random.nextInt(meteoritesColors.size)],
+                                starSize = starConstraints.getRandomStarSize().toInt(),
+                                listener = meteoriteListener
+                        )
 
-                    meteorEntity = MeteorEntity(starConstraints = starConstraints,
-                            x = viewWidth,
-                            y = Math.round(Math.random() * viewHeight).toInt(),
-                            color = meteoritesColors[random.nextInt(meteoritesColors.size)],
-                            viewWidth = viewWidth,
-                            viewHeight = viewHeight,
-                            colorListener = generateColor,
-                            onDoneListener = onDoneListener
-                    )
-
-                }, meteoritesInterval.toLong())
+                    }, meteoritesInterval.toLong())
+                }
             }
 
         }
@@ -210,7 +209,7 @@ constructor(
             createStar(it, starCompleteListener)
 
         }
-        onDoneListener.invoke()
+        meteoriteListener.onStarAnimationComplete()
 
         // so we know lateinit var was initiated
         initiated = true
@@ -237,7 +236,7 @@ constructor(
 
             // recalculate stars position and alphaInt on a background thread
             stars.forEach { it.calculateFrame() }
-            meteorEntity?.calculateFrame(viewWidth, viewHeight)
+            meteoriteWrapper?.calculateFrame(viewWidth, viewHeight)
             starsCalculatedFlag = true
 
             // then post to ui thread
