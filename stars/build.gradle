@@ -13,7 +13,7 @@ buildscript {
     }
 }
 
-def versionNameStr = "1.1.1"
+def versionNameStr = "1.1.2"
 
 android {
     compileSdkVersion 28
@@ -23,7 +23,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 111
+        versionCode 112
         versionName versionNameStr
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
