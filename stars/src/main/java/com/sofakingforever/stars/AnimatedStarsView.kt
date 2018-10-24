@@ -9,7 +9,6 @@ import com.sofakingforever.stars.entities.Star
 import com.sofakingforever.stars.entities.StarConstraints
 import com.sofakingforever.stars.entities.stars.BaseStar
 import com.sofakingforever.stars.entities.meteor.Meteorite
-import com.sofakingforever.stars.entities.meteor.MeteoriteWrapper
 import java.util.*
 import java.util.concurrent.Executors
 import kotlin.concurrent.timerTask
@@ -49,7 +48,7 @@ constructor(
 
 
     private var stars: MutableList<Star> = mutableListOf()
-    private var meteoriteWrapper: MeteoriteWrapper? = null
+    private var meteorite: Meteorite? = null
 
     private lateinit var timer: Timer
     private lateinit var task: TimerTask
@@ -160,7 +159,7 @@ constructor(
             // onDraw each star on the canvas
             stars.forEach { newCanvas = it.onDraw(newCanvas) }
 
-            newCanvas = meteoriteWrapper?.onDraw(newCanvas)
+            newCanvas = meteorite?.onDraw(newCanvas)
 
             // reset flag
             starsCalculatedFlag = false
@@ -187,7 +186,8 @@ constructor(
                 if (meteoritesEnabled) {
                     postDelayed({
 
-                        meteoriteWrapper = MeteoriteWrapper(
+                        meteorite = Meteorite(
+                                smallestWidth = Math.min(viewWidth, viewHeight),
                                 x = viewWidth,
                                 y = Math.round(Math.random() * (viewHeight * 2 / 3)).toInt(),
                                 color = meteoritesColors[random.nextInt(meteoritesColors.size)],
@@ -240,7 +240,7 @@ constructor(
 
             // recalculate stars position and alphaInt on a background thread
             stars.forEach { it.calculateFrame() }
-            meteoriteWrapper?.calculateFrame(viewWidth, viewHeight)
+            meteorite?.calculateFrame(viewWidth, viewHeight)
             starsCalculatedFlag = true
 
             // then post to ui thread

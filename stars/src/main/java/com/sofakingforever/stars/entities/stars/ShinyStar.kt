@@ -20,7 +20,6 @@ class ShinyStar(starConstraints: StarConstraints, x: Int, y: Int, color: Int, li
     }
 
     override fun calculateFrame() {
-        super.calculateFrame()
 
         if (hRect == null || vRect == null) {
 
