@@ -46,10 +46,10 @@ constructor(
     private var viewHeight: Int = 0
     private var starConstraints: StarConstraints
 
-
     private var stars: MutableList<Star> = mutableListOf()
     private var meteorite: Meteorite? = null
 
+    private lateinit var starsIterator: MutableIterator<Star>
     private lateinit var timer: Timer
     private lateinit var task: TimerTask
 
@@ -57,10 +57,11 @@ constructor(
     private var initiated: Boolean = false
     private var started: Boolean = false
 
-
+    private lateinit var meteoriteListener: Meteorite.MeteoriteCompleteListener
     private var meteoritesEnabled: Boolean
-
     private var meteoritesInterval: Int
+
+    private var calculateRunnable: Runnable? = null
 
     /**
      * init view's attributes
@@ -157,7 +158,8 @@ constructor(
 
         if (stars.isNotEmpty()) {
             // onDraw each star on the canvas
-            stars.forEach { newCanvas = it.onDraw(newCanvas) }
+            starsIterator = stars.iterator()
+            starsIterator.forEach { newCanvas = it.onDraw(newCanvas) }
 
             newCanvas = meteorite?.onDraw(newCanvas)
 
@@ -171,7 +173,7 @@ constructor(
     }
 
 
-    private lateinit var meteoriteListener: Meteorite.MeteoriteCompleteListener
+
 
     /**
      * create x stars with a random point location and alphaDouble
@@ -228,25 +230,35 @@ constructor(
                 listener = starCompleteListener)
     }
 
+
     /**
      * calculate and invalidate all stars for the next frame
      */
     private fun invalidateStars() {
 
+        // not initiated
         if (!initiated) return
 
-        // new background thread
-        threadExecutor.execute {
+        // not finised drawing
+        if (starsCalculatedFlag) return
 
-            // recalculate stars position and alphaInt on a background thread
-            stars.forEach { it.calculateFrame() }
-            meteorite?.calculateFrame(viewWidth, viewHeight)
-            starsCalculatedFlag = true
+        if (calculateRunnable == null){
+            calculateRunnable = Runnable {
 
-            // then post to ui thread
-            postInvalidate()
+                // recalculate stars position and alphaInt on a background thread
+                starsIterator = stars.iterator()
+                starsIterator.forEach { it.calculateFrame() }
+                meteorite?.calculateFrame(viewWidth, viewHeight)
+                starsCalculatedFlag = true
 
+                // then post to ui thread
+                postInvalidate()
+            }
         }
+
+
+        // new background thread
+        threadExecutor.execute(calculateRunnable)
 
     }
 }

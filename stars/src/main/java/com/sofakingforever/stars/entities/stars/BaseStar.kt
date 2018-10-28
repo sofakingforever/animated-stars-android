@@ -26,7 +26,8 @@ abstract class BaseStar(
     override val starSize: Double = starConstraints.getRandomStarSize()
 
 
-    internal var paint: Paint? = null
+    internal var paint = initPaintColor()
+
 
     abstract fun initPaintColor(): Paint
 
@@ -39,7 +40,6 @@ abstract class BaseStar(
 
         calculated = true
 
-        paint = initPaintColor()
 
         // calculate direction / multiplierFactor of alphaDouble
 
