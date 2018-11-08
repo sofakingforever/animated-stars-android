@@ -21,6 +21,9 @@ repositories {
 
 dependencies {
     implementation 'com.sofakingforever.libraries:stars:1.1.3@aar'
+
+    // Don't forget to add kotlin if you're in a pure-java project (thanks to moisoni97)
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.2.71
 }
 ```
 
