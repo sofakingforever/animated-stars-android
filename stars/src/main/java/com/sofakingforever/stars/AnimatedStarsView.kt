@@ -17,7 +17,7 @@ import kotlin.concurrent.timerTask
 /**
  * Kotlin Android view that draws animated stars on a canvas
  *
- * Used in Wakey - Beautiful Alarm Clock for Android: http://bit.ly/2uI8pgL
+ * Used in Wakey - Cute & Gentle Alarm Clock for Android: http://bit.ly/2uI8pgL
  * Check out the article on Medium: http://bit.ly/2NlFJBW
  * Or see what it looks like on YouTube: https://www.youtube.com/watch?v=v1-228CkoQc
  *
@@ -156,23 +156,23 @@ constructor(
         // create a variable canvas object
         var newCanvas = canvas
 
-        if (stars.isNotEmpty()) {
-            // onDraw each star on the canvas
-            starsIterator = stars.iterator()
-            starsIterator.forEach { newCanvas = it.onDraw(newCanvas) }
 
-            newCanvas = meteorite?.onDraw(newCanvas)
+        synchronized(stars) {
+            if (stars.isNotEmpty()) {
+                // onDraw each star on the canvas
+                starsIterator = stars.iterator()
+                starsIterator.forEach { newCanvas = it.onDraw(newCanvas) }
 
-            // reset flag
-            starsCalculatedFlag = false
+                newCanvas = meteorite?.onDraw(newCanvas)
+
+                // reset flag
+                starsCalculatedFlag = false
+            }
         }
-
         // finish drawing view
         super.onDraw(newCanvas)
 
     }
-
-
 
 
     /**
@@ -203,18 +203,20 @@ constructor(
 
         }
 
+        synchronized(stars) {
+            stars = MutableList(starCount) {
 
-        stars = MutableList(starCount) {
+                val starCompleteListener = object : BaseStar.StarCompleteListener {
+                    override fun onStarAnimationComplete() {
+                        stars[it] = createStar(it, this)
+                    }
 
-            val starCompleteListener = object : BaseStar.StarCompleteListener {
-                override fun onStarAnimationComplete() {
-                    stars[it] = createStar(it, this)
                 }
+                createStar(it, starCompleteListener)
 
             }
-            createStar(it, starCompleteListener)
-
         }
+
         meteoriteListener.onMeteoriteComplete()
 
         // so we know lateinit var was initiated
@@ -242,12 +244,14 @@ constructor(
         // not finised drawing
         if (starsCalculatedFlag) return
 
-        if (calculateRunnable == null){
+        if (calculateRunnable == null) {
             calculateRunnable = Runnable {
 
-                // recalculate stars position and alphaInt on a background thread
-                starsIterator = stars.iterator()
-                starsIterator.forEach { it.calculateFrame() }
+                synchronized(stars) {
+                    // recalculate stars position and alphaInt on a background thread
+                    starsIterator = stars.iterator()
+                    starsIterator.forEach { it.calculateFrame() }
+                }
                 meteorite?.calculateFrame(viewWidth, viewHeight)
                 starsCalculatedFlag = true
 
