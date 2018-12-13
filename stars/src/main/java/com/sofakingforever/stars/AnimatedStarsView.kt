@@ -4,8 +4,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
+import com.sofakingforever.stars.entities.InterstellarFactory
+import com.sofakingforever.stars.entities.Star
+import com.sofakingforever.stars.entities.StarConstraints
+import com.sofakingforever.stars.entities.stars.BaseStar
+import com.sofakingforever.stars.entities.meteor.Meteorite
 import java.util.*
-import java.util.Collections.emptyList
 import java.util.concurrent.Executors
 import kotlin.concurrent.timerTask
 
@@ -32,7 +36,7 @@ constructor(
 
     private var starCount: Int
     private var starColors: IntArray
-    private var meteoritesColors : IntArray
+    private var meteoritesColors: IntArray
     private var bigStarThreshold: Int
     private var minStarSize: Int
     private var maxStarSize: Int
@@ -40,12 +44,12 @@ constructor(
     private var starsCalculatedFlag: Boolean = false
     private var viewWidth: Int = 0
     private var viewHeight: Int = 0
-    private var starConstraints: Star.StarConstraints
+    private var starConstraints: StarConstraints
 
+    private var stars: MutableList<Star> = mutableListOf()
+    private var meteorite: Meteorite? = null
 
-    private var stars: List<Star> = emptyList()
-    private var meteorEntity: MeteorEntity? = null
-
+    private lateinit var starsIterator: MutableIterator<Star>
     private lateinit var timer: Timer
     private lateinit var task: TimerTask
 
@@ -53,10 +57,11 @@ constructor(
     private var initiated: Boolean = false
     private var started: Boolean = false
 
-
+    private lateinit var meteoriteListener: Meteorite.MeteoriteCompleteListener
     private var meteoritesEnabled: Boolean
-
     private var meteoritesInterval: Int
+
+    private var calculateRunnable: Runnable? = null
 
     /**
      * init view's attributes
@@ -70,9 +75,9 @@ constructor(
         minStarSize = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_minStarSize, 4)
         maxStarSize = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_maxStarSize, 24)
         bigStarThreshold = array.getDimensionPixelSize(R.styleable.AnimatedStarsView_starsView_bigStarThreshold, Integer.MAX_VALUE)
-        starConstraints = Star.StarConstraints(minStarSize, maxStarSize, bigStarThreshold)
+        starConstraints = StarConstraints(minStarSize, maxStarSize, bigStarThreshold)
 
-        meteoritesColors  = intArrayOf()
+        meteoritesColors = intArrayOf()
         meteoritesEnabled = array.getBoolean(R.styleable.AnimatedStarsView_starsView_meteoritesEnabled, false)
         meteoritesInterval = array.getInt(R.styleable.AnimatedStarsView_starsView_meteoritesInterval, 5000)
 
@@ -83,7 +88,7 @@ constructor(
             starColors = context.resources.getIntArray(starColorsArrayId)
         }
 
-        if (meteoritesColorsArrayId!= 0) {
+        if (meteoritesColorsArrayId != 0) {
             meteoritesColors = context.resources.getIntArray(meteoritesColorsArrayId)
 
         }
@@ -153,9 +158,10 @@ constructor(
 
         if (stars.isNotEmpty()) {
             // onDraw each star on the canvas
-            stars.forEach { newCanvas = it.onDraw(newCanvas) }
+            starsIterator = stars.iterator()
+            starsIterator.forEach { newCanvas = it.onDraw(newCanvas) }
 
-            newCanvas = meteorEntity?.onDraw(newCanvas)
+            newCanvas = meteorite?.onDraw(newCanvas)
 
             // reset flag
             starsCalculatedFlag = false
@@ -167,76 +173,92 @@ constructor(
     }
 
 
-    private lateinit var onDoneListener: () -> Unit
+
 
     /**
-     * create x stars with a random point location and opacity
+     * create x stars with a random point location and alphaDouble
      */
     private fun initStars() {
 
         if (!started) return
-        val generateColor = { starColors[random.nextInt(starColors.size)] }
+//        val generateColor = { starColors[random.nextInt(starColors.size)] }
 
-        onDoneListener = {
+        meteoriteListener = object : Meteorite.MeteoriteCompleteListener {
+            override fun onMeteoriteComplete() {
+                if (meteoritesEnabled) {
+                    postDelayed({
 
-            if (meteoritesEnabled) {
-                postDelayed({
+                        meteorite = Meteorite(
+                                smallestWidth = Math.min(viewWidth, viewHeight),
+                                x = viewWidth,
+                                y = Math.round(Math.random() * (viewHeight * 2 / 3)).toInt(),
+                                color = meteoritesColors[random.nextInt(meteoritesColors.size)],
+                                starSize = starConstraints.getRandomStarSize().toInt(),
+                                listener = meteoriteListener
+                        )
 
-                    meteorEntity = MeteorEntity(starConstraints = starConstraints,
-                            x = viewWidth,
-                            y = Math.round(Math.random() * viewHeight).toInt(),
-                            color = meteoritesColors[random.nextInt(meteoritesColors.size)],
-                            viewWidth = viewWidth,
-                            viewHeight = viewHeight,
-                            colorListener = generateColor,
-                            onDoneListener = onDoneListener
-                    )
-
-                }, meteoritesInterval.toLong())
+                    }, meteoritesInterval.toLong())
+                }
             }
 
         }
 
-        stars = List(starCount) {
 
-            Star(
-                    starConstraints = starConstraints,
-                    x = 0,
-                    y = 0,
-                    randomizeLocation = true,
-                    opacity = Math.random(),
-                    color = starColors[it % starColors.size],
-                    viewWidth = viewWidth,
-                    viewHeight = viewHeight,
-                    colorListener = generateColor
-            )
+        stars = MutableList(starCount) {
+
+            val starCompleteListener = object : BaseStar.StarCompleteListener {
+                override fun onStarAnimationComplete() {
+                    stars[it] = createStar(it, this)
+                }
+
+            }
+            createStar(it, starCompleteListener)
+
         }
-        onDoneListener.invoke()
+        meteoriteListener.onMeteoriteComplete()
 
         // so we know lateinit var was initiated
         initiated = true
 
     }
 
+    private fun createStar(it: Int, starCompleteListener: BaseStar.StarCompleteListener): Star {
+        return InterstellarFactory.create(starConstraints = starConstraints,
+                x = Math.round(Math.random() * viewWidth).toInt(),
+                y = Math.round(Math.random() * viewHeight).toInt(),
+                color = starColors[it % starColors.size],
+                listener = starCompleteListener)
+    }
+
+
     /**
      * calculate and invalidate all stars for the next frame
      */
     private fun invalidateStars() {
 
+        // not initiated
         if (!initiated) return
 
-        // new background thread
-        threadExecutor.execute {
+        // not finised drawing
+        if (starsCalculatedFlag) return
 
-            // recalculate stars position and alpha on a background thread
-            stars.forEach { it.calculateFrame(viewWidth, viewHeight) }
-            meteorEntity?.calculateFrame(viewWidth, viewHeight)
-            starsCalculatedFlag = true
+        if (calculateRunnable == null){
+            calculateRunnable = Runnable {
 
-            // then post to ui thread
-            postInvalidate()
+                // recalculate stars position and alphaInt on a background thread
+                starsIterator = stars.iterator()
+                starsIterator.forEach { it.calculateFrame() }
+                meteorite?.calculateFrame(viewWidth, viewHeight)
+                starsCalculatedFlag = true
 
+                // then post to ui thread
+                postInvalidate()
+            }
         }
+
+
+        // new background thread
+        threadExecutor.execute(calculateRunnable)
 
     }
 }
