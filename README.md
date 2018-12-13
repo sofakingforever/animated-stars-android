@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.sofakingforever.libraries:stars:1.1.4@aar'
+    implementation 'com.sofakingforever.libraries:animated-stars-android:1.1.4@aar'
 
     // Don't forget to add kotlin if you're in a pure-java project (thanks to moisoni97)
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.2.71
